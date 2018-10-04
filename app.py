@@ -2,10 +2,12 @@ from flask import Flask, render_template,request
 import requests
 from flask_sqlalchemy import SQLAlchemy
 import pprint
+import configparser
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///weather.db'
-
+config = configparser.ConfigParser()
+config.read('config.txt')
 db = SQLAlchemy(app)
 
 class City(db.Model):
@@ -22,10 +24,10 @@ def index():
 
     cities =  City.query.all()
 
-    url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=05560cf3177657c1ed0d4c154212db40'
+    url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid={}'
     weather_data=[]
     for city in cities:
-        r=requests.get(url.format(city.name)).json()
+        r=requests.get(url.format(city.name,config.get("configuration","password"))).json()
         weather = {
             'city':city.name,
             'temperature':r['main']['temp'],

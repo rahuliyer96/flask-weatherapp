@@ -1,0 +1,2 @@
+[configuration]
+password = 05560cf3177657c1ed0d4c154212db40
